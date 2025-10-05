@@ -158,6 +158,7 @@ def get_connection():
         user=DB_USER,
         password=DB_PASS,
         sslmode="require",
+        options='-c search_path=analytics'
     )
 
 
@@ -290,9 +291,16 @@ def populate_static_data():
     conn = get_connection()
     cursor = conn.cursor()
 
+    # Set schema
+    cursor.execute(f"SET search_path TO {DB_SCHEMA};")
+
+    print("📊 Truncating tables...")
+    
     # Clear existing data
     cursor.execute("TRUNCATE TABLE users, stores, products RESTART IDENTITY CASCADE;")
 
+    print("📊 Truncated tables...")
+    
     # Insert beverage products
     products_data = [
         # Cola Category (expanded)
@@ -942,6 +950,8 @@ def populate_static_data():
         "INSERT INTO products (product_name, brand, category, package_size, unit_price) VALUES (%s, %s, %s, %s, %s)",
         products_data,
     )
+
+    print("📊 Inserted Products data...")
 
     # Insert store data
     stores_data = [
@@ -2020,6 +2030,9 @@ def populate_dynamic_data():
     conn = get_connection()
     cursor = conn.cursor()
 
+    # Set schema
+    cursor.execute(f"SET search_path TO {DB_SCHEMA};")
+
     # Clear existing dynamic data
     print("Clearing existing data...")
     cursor.execute("TRUNCATE TABLE orders, inventory RESTART IDENTITY;")
@@ -2208,6 +2221,9 @@ def setup_analytics():
 
     conn = get_connection()
     cursor = conn.cursor()
+
+    # Set schema
+    cursor.execute(f"SET search_path TO {DB_SCHEMA};")
 
     # Create materialized views - assuming analytics schema already exists
     cursor.execute(

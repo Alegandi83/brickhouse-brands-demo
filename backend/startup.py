@@ -15,6 +15,8 @@ def startup():
         # Initialize database connection pool
         init_connection_pool()
 
+        print("📁 Initiated database connection pool...")
+
         # Register cleanup function
         atexit.register(close_connection_pool)
 
@@ -27,7 +29,7 @@ def startup():
             host="0.0.0.0",
             port=8000,
             reload=True,  # Enable auto-reload for development
-            log_level="info",
+            log_level="debug",  # Cambiato da info a debug per più dettagli
         )
 
     except KeyboardInterrupt:

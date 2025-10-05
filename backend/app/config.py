@@ -99,6 +99,7 @@ class AppConfig:
             "database": os.getenv("DB_NAME", "postgres"),
             "user": os.getenv("DB_USER"),
             "password": os.getenv("DB_PASSWORD"),
+            "options": f"-c search_path={os.getenv('DB_SCHEMA', 'analytics')}",
         }
 
         # If we have an OAuth token, we could potentially use it for authentication
